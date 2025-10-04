@@ -20,7 +20,6 @@ import {
   Space,
   Divider,
 } from "antd";
-import withTheme from "../../../theme";
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -88,8 +87,4 @@ const Home = function Home() {
   );
 };
 
-const HomePage = () => {
-  return withTheme(<Home />);
-};
-
-export default HomePage;
+export default Home;

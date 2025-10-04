@@ -1,14 +1,18 @@
+/* Base (light) theme variables */
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
-    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
 
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  /* Semantic palette (light) */
+  --page-bg: #f5f7fa;
+  --page-bg-accent: #ffffff;
+  --page-bg-muted: #eef1f4;
+  --page-border: #d9dfe5;
+  --page-text: #1d2126;
+  --page-text-secondary: #5b6570;
+  --page-shadow: 0 2px 4px rgba(0,0,0,0.06), 0 6px 18px rgba(0,0,0,0.04);
 
+  /* Legacy decorative gradients (optional retain) */
   --primary-glow: conic-gradient(
     from 180deg at 50% 50%,
     #16abff33 0deg,
@@ -17,60 +21,18 @@
     #0071ff33 160deg,
     transparent 360deg
   );
-  --secondary-glow: radial-gradient(
-    rgba(255, 255, 255, 1),
-    rgba(255, 255, 255, 0)
-  );
-
-  --tile-start-rgb: 239, 245, 249;
-  --tile-end-rgb: 228, 232, 233;
-  --tile-border: conic-gradient(
-    #00000080,
-    #00000040,
-    #00000030,
-    #00000020,
-    #00000010,
-    #00000010,
-    #00000080
-  );
-
-  --callout-rgb: 238, 240, 241;
-  --callout-border-rgb: 172, 175, 176;
-  --card-rgb: 180, 185, 188;
-  --card-border-rgb: 131, 134, 135;
+  --secondary-glow: radial-gradient(rgba(255,255,255,1), rgba(255,255,255,0));
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 80, 80, 80;
-    --background-end-rgb: 80, 80, 80;
-
-    --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
-    --secondary-glow: linear-gradient(
-      to bottom right,
-      rgba(1, 65, 255, 0),
-      rgba(1, 65, 255, 0),
-      rgba(1, 65, 255, 0.3)
-    );
-
-    --tile-start-rgb: 2, 13, 46;
-    --tile-end-rgb: 2, 5, 19;
-    --tile-border: conic-gradient(
-      #ffffff80,
-      #ffffff40,
-      #ffffff30,
-      #ffffff20,
-      #ffffff10,
-      #ffffff10,
-      #ffffff80
-    );
-
-    --callout-rgb: 20, 20, 20;
-    --callout-border-rgb: 108, 108, 108;
-    --card-rgb: 100, 100, 100;
-    --card-border-rgb: 200, 200, 200;
-  }
+/* Dark theme overrides via data attribute set by JS */
+:root[data-theme="dark"] {
+  --page-bg: #0f1419;
+  --page-bg-accent: #1b232c;
+  --page-bg-muted: #242f3a;
+  --page-border: #32414f;
+  --page-text: #e6ecf1;
+  --page-text-secondary: #92a2b2;
+  --page-shadow: 0 2px 4px rgba(0,0,0,0.7), 0 6px 18px rgba(0,0,0,0.55);
 }
 
 * {
@@ -86,21 +48,31 @@ body {
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  background: var(--page-bg);
+  color: var(--page-text);
+  transition: background 0.25s ease, color 0.25s ease;
 }
-
 
 label, h1, h2, .ant-form-text, .ant-divider-inner-text, a {
-  color: rgb(var(--foreground-rgb)) !important;
+  color: var(--page-text) !important;
 }
+
+.muted-text { color: var(--page-text-secondary); }
 
 a {
   color: inherit;
   text-decoration: none;
 }
 
+/* Respect system preference before JS runs (progressive enhancement) */
 @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+  :root:not([data-theme]) {
+    --page-bg: #0f1419;
+    --page-bg-accent: #1b232c;
+    --page-bg-muted: #242f3a;
+    --page-border: #32414f;
+    --page-text: #e6ecf1;
+    --page-text-secondary: #92a2b2;
+    --page-shadow: 0 2px 4px rgba(0,0,0,0.7), 0 6px 18px rgba(0,0,0,0.55);
   }
 }

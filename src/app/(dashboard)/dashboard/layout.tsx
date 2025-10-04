@@ -1,10 +1,11 @@
+"use client";
 import React from "react";
 import Link from "next/link";
 import { Layout, Menu } from "antd";
 
-export const metadata = {
-  title: "Dashboard | VMS",
-};
+// export const metadata = {
+//   title: "Dashboard | VMS",
+// };
 
 const { Header, Sider, Content } = Layout;
 

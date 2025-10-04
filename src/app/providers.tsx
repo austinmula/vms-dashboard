@@ -51,6 +51,16 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
+  // Reflect current mode as an attribute so CSS can react immediately
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute(
+        "data-theme",
+        isDark ? "dark" : "light"
+      );
+    }
+  }, [isDark]);
+
   const toggleTheme = () => {
     setIsDark((prev) => {
       const next = !prev;
@@ -68,6 +78,32 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
       token: {
         colorPrimary: "#52c41a",
         borderRadius: 16,
+        colorBgBase: isDark ? "#0f1419" : "#ffffff",
+        colorBgLayout: isDark ? "#0f1419" : "#f5f7fa",
+        colorBgContainer: isDark ? "#1b232c" : "#ffffff",
+        colorBorder: isDark ? "#32414f" : "#d9dfe5",
+        colorText: isDark ? "#e6ecf1" : "#1d2126",
+        colorTextSecondary: isDark ? "#92a2b2" : "#5b6570",
+        boxShadow: isDark
+          ? "0 2px 4px rgba(0,0,0,0.7), 0 6px 18px rgba(0,0,0,0.55)"
+          : "0 2px 4px rgba(0,0,0,0.06), 0 6px 18px rgba(0,0,0,0.04)",
+      },
+      components: {
+        Card: {
+          colorBgContainer: isDark ? "#1b232c" : "#ffffff",
+          boxShadowTertiary: isDark
+            ? "0 1px 2px rgba(0,0,0,0.65)"
+            : "0 1px 2px rgba(0,0,0,0.08)",
+        },
+        Layout: {
+          bodyBg: isDark ? "#0f1419" : "#f5f7fa",
+          headerBg: isDark ? "#1b232c" : "#ffffff",
+          footerBg: isDark ? "#1b232c" : "#ffffff",
+        },
+        Menu: {
+          colorItemBg: "transparent",
+          colorItemBgSelected: isDark ? "#242f3a" : "#e6f4ff",
+        },
       },
     }),
     [isDark]

@@ -17,6 +17,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          // Hydration-safe inline script to set initial theme before paint
+          dangerouslySetInnerHTML={{
+            __html: `(() => {try {const k='color-scheme';const s=localStorage.getItem(k);let d=false;if(s==='dark'){d=true;} else if(s==='light'){d=false;} else {d=window.matchMedia('(prefers-color-scheme: dark)').matches;}document.documentElement.setAttribute('data-theme', d?'dark':'light');} catch(e) {}})();`,
+          }}
+        />
+      </head>
       <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>

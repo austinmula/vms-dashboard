@@ -78,10 +78,10 @@ export const ROLE_PERMISSIONS = {
 };
 
 // Helper function to get permissions for a user's roles
-export const getUserPermissions = (roles: Role[]) => {
+export const getUserPermissions = (roles: Role[]): string[] => {
   if (!roles || !Array.isArray(roles)) return [];
 
-  const allPermissions = new Set();
+  const allPermissions = new Set<string>();
 
   roles.forEach((role) => {
     const roleName = typeof role === "string" ? role : role.name;

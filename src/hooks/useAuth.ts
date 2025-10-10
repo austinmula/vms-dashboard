@@ -1,0 +1,47 @@
+// hooks/useAuth.ts
+
+import { useSelector, useDispatch } from "react-redux";
+import { useSession, signOut as nextAuthSignOut } from "next-auth/react";
+import {
+  selectUser,
+  selectIsAuthenticated,
+  selectIsLoading,
+  selectRoles,
+  selectAccessToken,
+  logout as logoutAction,
+} from "@/store/slices/authSlice";
+import { authApi } from "@/lib/api/client";
+
+export function useAuth() {
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const isLoading = useSelector(selectIsLoading);
+  const roles = useSelector(selectRoles);
+  const accessToken = useSelector(selectAccessToken);
+
+  const logout = async () => {
+    try {
+      // Call your API logout endpoint
+      await authApi.logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      // Clear Redux state
+      dispatch(logoutAction());
+      // Sign out from NextAuth
+      await nextAuthSignOut({ redirect: false });
+      // Redirect to login
+      window.location.href = "/auth/signin";
+    }
+  };
+
+  return {
+    user,
+    roles,
+    isAuthenticated,
+    isLoading,
+    accessToken,
+    logout,
+  };
+}

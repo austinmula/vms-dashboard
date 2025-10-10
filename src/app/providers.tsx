@@ -9,6 +9,12 @@ import React, {
 } from "react";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider, theme as antdTheme, Button, Flex } from "antd";
+import { SessionProvider } from "next-auth/react";
+import { Provider } from "react-redux";
+import { useSession } from "next-auth/react";
+import { store } from "@/store";
+import { useAppDispatch } from "@/hooks/redux";
+import { setCredentials, logout, setLoading } from "@/store/slices/authSlice";
 
 // Shape of the theme context
 interface ThemeContextValue {
@@ -23,6 +29,52 @@ export const useThemeMode = () => {
   if (!ctx) throw new Error("useThemeMode must be used within <Providers>");
   return ctx;
 };
+
+// AuthSync component to sync NextAuth session with Redux
+function AuthSync() {
+  const { data: session, status } = useSession();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (status === "loading") {
+      dispatch(setLoading(true));
+      return;
+    }
+
+    if (status === "authenticated" && session?.user) {
+      // Sync NextAuth session to Redux
+      dispatch(
+        setCredentials({
+          user: {
+            id: session.user.id,
+            email: session.user.email,
+            employeeId: session.user.employeeId,
+            employee: {
+              firstName: session.user.firstName,
+              lastName: session.user.lastName,
+              department: session.user.department,
+              jobTitle: session.user.jobTitle,
+            },
+            roles: session.user.roles,
+            isActive: session.user.isActive,
+            mfaEnabled: session.user.mfaEnabled,
+            mustChangePassword: session.user.mustChangePassword,
+          },
+          tokens: {
+            accessToken: session.accessToken,
+            refreshToken: session.refreshToken,
+            expiresIn: "24h", // Default value since session.expires is a date
+          },
+          permissions: session.user.permissions,
+        })
+      );
+    } else if (status === "unauthenticated") {
+      dispatch(logout());
+    }
+  }, [session, status, dispatch]);
+
+  return null;
+}
 
 // Persist preference key
 const STORAGE_KEY = "color-scheme";
@@ -123,13 +175,18 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
   );
 
   return (
-    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
-      <AntdRegistry>
-        <ConfigProvider theme={themeConfig}>
-          {Toggle}
-          {children}
-        </ConfigProvider>
-      </AntdRegistry>
-    </ThemeContext.Provider>
+    <Provider store={store}>
+      <SessionProvider>
+        <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+          <AntdRegistry>
+            <ConfigProvider theme={themeConfig}>
+              <AuthSync />
+              {Toggle}
+              {children}
+            </ConfigProvider>
+          </AntdRegistry>
+        </ThemeContext.Provider>
+      </SessionProvider>
+    </Provider>
   );
 };

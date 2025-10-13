@@ -38,7 +38,7 @@ apiClient.interceptors.response.use(
 
       try {
         const refreshToken = localStorage.getItem("refreshToken");
-        const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+        const response = await axios.post(`${API_BASE_URL}/api/auth/refresh`, {
           refreshToken,
         });
 
@@ -51,7 +51,7 @@ apiClient.interceptors.response.use(
         // Refresh failed, redirect to login
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-        window.location.href = "/auth/signin";
+        window.location.href = "/auth/login";
         return Promise.reject(refreshError);
       }
     }
@@ -63,17 +63,21 @@ apiClient.interceptors.response.use(
 // Auth API calls
 export const authApi = {
   login: async (email: string, password: string) => {
-    const response = await apiClient.post("/auth/login", { email, password });
+    const response = await apiClient.post("/api/auth/login", {
+      email,
+      password,
+    });
+    console.log("Login response:", response);
     return response.data;
   },
 
   logout: async () => {
-    const response = await apiClient.post("/auth/logout");
+    const response = await apiClient.post("/api/auth/logout");
     return response.data;
   },
 
   refreshToken: async (refreshToken: string) => {
-    const response = await apiClient.post("/auth/refresh", { refreshToken });
+    const response = await apiClient.post("/api/auth/refresh", { refreshToken });
     return response.data;
   },
 

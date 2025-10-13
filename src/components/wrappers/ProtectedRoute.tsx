@@ -16,7 +16,7 @@ export function ProtectedRoute({
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push("/auth/signin");
+      router.push("/auth/login");
     }
 
     // Check if user must change password

@@ -32,7 +32,7 @@ export function useAuth() {
       // Sign out from NextAuth
       await nextAuthSignOut({ redirect: false });
       // Redirect to login
-      window.location.href = "/auth/signin";
+      window.location.href = "/auth/login";
     }
   };
 

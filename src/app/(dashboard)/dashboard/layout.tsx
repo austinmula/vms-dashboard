@@ -1,7 +1,16 @@
 "use client";
 import React, { useMemo, useState, useCallback } from "react";
 import Link from "next/link";
-import { Layout, Menu, Avatar, Badge, Dropdown, theme, Button } from "antd";
+import {
+  Layout,
+  Menu,
+  Avatar,
+  Badge,
+  Dropdown,
+  Button,
+  Tag,
+  Divider,
+} from "antd";
 import {
   DashboardOutlined,
   SettingOutlined,
@@ -15,14 +24,10 @@ import {
   BarChartOutlined,
   ExperimentOutlined,
 } from "@ant-design/icons";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { usePermissions } from "@/hooks/usePermissions";
 import { ProtectedRoute } from "@/components/wrappers/ProtectedRoute";
-
-// export const metadata = {
-//   title: "Dashboard | VMS",
-// };
 
 const { Header, Sider, Content } = Layout;
 
@@ -34,13 +39,31 @@ export default function DashboardLayout({
   const { user } = useAuth();
   const { roles } = usePermissions();
   const pathname = usePathname();
+  const router = useRouter();
+  const primaryRole = roles?.[0];
 
-  // Selected key from pathname (including nested routes)
+  const displayName = useMemo(() => {
+    if (!user) return "Unknown User";
+    if ((user as any).firstName) {
+      const first = (user as any).firstName;
+      const last = (user as any).lastName || "";
+      return `${first} ${last}`.trim();
+    }
+    return (user as any).name || (user as any).email?.split("@")[0] || "User";
+  }, [user]);
+
+  const handleLogout = useCallback(() => {
+    // TODO: integrate with NextAuth signOut + redux clear
+    router.push("/login");
+  }, [router]);
+
+  const gotoSettings = useCallback(() => {
+    router.push("/dashboard/settings/profile");
+  }, [router]);
+
   const selectedKeys = useMemo(() => {
     if (!pathname) return [];
-    // Match deepest segment to a menu item key
     const segment = pathname.replace(/\/$/, "").split("/").pop() || "overview";
-    // Map known segments to keys
     const map: Record<string, string> = {
       settings: "settings-root",
       profile: "settings-profile",
@@ -66,13 +89,8 @@ export default function DashboardLayout({
     return [map[segment] || "overview"];
   }, [pathname]);
 
-  // Track open submenus
-  const [openKeys, setOpenKeys] = useState<string[]>([
-    // Optionally auto-open based on selected key
-  ]);
-  const onOpenChange = useCallback((keys: string[]) => {
-    setOpenKeys(keys);
-  }, []);
+  const [openKeys, setOpenKeys] = useState<string[]>([]);
+  const onOpenChange = useCallback((keys: string[]) => setOpenKeys(keys), []);
 
   const menuItems = [
     {
@@ -197,14 +215,11 @@ export default function DashboardLayout({
           label: <Link href="/dashboard/settings">Settings</Link>,
           icon: <SettingOutlined />,
         },
-        {
-          key: "logout",
-          label: <span>Logout</span>,
-          icon: <LogoutOutlined />,
-        },
+        { key: "logout", label: <span>Logout</span>, icon: <LogoutOutlined /> },
       ]}
     />
   );
+
   return (
     <ProtectedRoute>
       <Layout style={{ minHeight: "100vh" }}>
@@ -234,10 +249,10 @@ export default function DashboardLayout({
             <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Avatar
                 shape="square"
-                size={32}
+                size={36}
                 style={{ background: "#52c41a" }}
               >
-                VF
+                WF
               </Avatar>
               Waggy<span style={{ color: "var(--accent-color)" }}>Flow</span>
             </span>
@@ -257,27 +272,68 @@ export default function DashboardLayout({
           />
           <div
             style={{
-              padding: 16,
+              padding: 14,
               borderTop: "1px solid var(--page-border)",
               display: "flex",
               flexDirection: "column",
-              gap: 8,
+              gap: 12,
+              background: "var(--page-bg)",
             }}
           >
-            <Button
-              type="text"
-              style={{ textAlign: "left", padding: 0 }}
-              icon={<SettingOutlined />}
-            >
-              Preferences
-            </Button>
-            <Button
-              type="text"
-              style={{ textAlign: "left", padding: 0 }}
-              icon={<LogoutOutlined />}
-            >
-              Logout
-            </Button>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <Avatar size={36} style={{ background: "#1677ff" }}>
+                {displayName.slice(0, 1).toUpperCase()}
+              </Avatar>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  lineHeight: 1.25,
+                }}
+              >
+                <span style={{ fontWeight: 600 }}>{displayName}</span>
+                {primaryRole && (
+                  <Tag
+                    color="blue"
+                    style={{
+                      width: "fit-content",
+                      paddingInline: 6,
+                      fontSize: 11,
+                    }}
+                  >
+                    {String(primaryRole)}
+                  </Tag>
+                )}
+              </div>
+            </div>
+            <Divider style={{ margin: "4px 0" }} />
+            <div style={{ display: "flex", gap: 8 }}>
+              <Button
+                size="small"
+                icon={<SettingOutlined />}
+                onClick={gotoSettings}
+                style={{
+                  flex: 1,
+                  justifyContent: "flex-start",
+                  display: "flex",
+                }}
+              >
+                Settings
+              </Button>
+              <Button
+                size="small"
+                danger
+                icon={<LogoutOutlined />}
+                onClick={handleLogout}
+                style={{
+                  flex: 1,
+                  justifyContent: "flex-start",
+                  display: "flex",
+                }}
+              >
+                Logout
+              </Button>
+            </div>
           </div>
         </Sider>
         <Layout>
@@ -315,7 +371,7 @@ export default function DashboardLayout({
               </Badge>
               <Dropdown overlay={userMenu} trigger={["click"]}>
                 <Avatar style={{ background: "#1890ff" }}>
-                  {user?.firstName?.[0] || user?.email?.[0] || "U"}
+                  {displayName.slice(0, 1).toUpperCase()}
                 </Avatar>
               </Dropdown>
             </div>
@@ -323,7 +379,7 @@ export default function DashboardLayout({
           <Content
             style={{ padding: 24, background: "var(--page-bg)", minHeight: 0 }}
           >
-            <div style={{ maxWidth: 1280, margin: "0 auto" }}>{children}</div>
+            <div style={{ maxWidth: 1536, margin: "0 0" }}>{children}</div>
           </Content>
         </Layout>
       </Layout>

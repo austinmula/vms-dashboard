@@ -23,6 +23,7 @@ import {
   DatabaseOutlined,
   BarChartOutlined,
   ExperimentOutlined,
+  BankOutlined,
 } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
@@ -71,6 +72,7 @@ export default function DashboardLayout({
       preferences: "settings-preferences",
       users: "users",
       teams: "teams",
+      organizations: "organizations",
       resources: "resources-root",
       clusters: "resources-clusters",
       services: "resources-services",
@@ -97,6 +99,11 @@ export default function DashboardLayout({
       key: "overview",
       icon: <DashboardOutlined />,
       label: <Link href="/dashboard">Overview</Link>,
+    },
+    {
+      key: "organizations",
+      icon: <BankOutlined />,
+      label: <Link href="/dashboard/organizations">Organizations</Link>,
     },
     {
       key: "settings-root",

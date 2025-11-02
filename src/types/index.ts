@@ -25,6 +25,7 @@ export interface User {
   employeeId: string;
   employee: Employee;
   roles: Role[];
+  permissions: string[];
   isActive: boolean;
   mfaEnabled: boolean;
   mustChangePassword: boolean;

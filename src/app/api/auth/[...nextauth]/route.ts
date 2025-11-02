@@ -3,7 +3,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { authApi } from "@/lib/api/client";
-import { getUserPermissions } from "@/lib/rbac/permissions";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -28,10 +27,8 @@ export const authOptions: NextAuthOptions = {
           if (response.success && response.data) {
             const { user, tokens } = response.data;
 
-            // Calculate permissions from roles
-            const permissions = getUserPermissions(user.roles);
-
             // Return user data to be stored in JWT
+            // Permissions now come directly from the backend
             return {
               id: user.id,
               email: user.email,
@@ -44,7 +41,7 @@ export const authOptions: NextAuthOptions = {
               department: user.employee?.department || "",
               jobTitle: user.employee?.jobTitle || "",
               roles: user.roles,
-              permissions,
+              permissions: user.permissions || [],
               isActive: user.isActive,
               mfaEnabled: user.mfaEnabled,
               mustChangePassword: user.mustChangePassword,

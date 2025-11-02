@@ -42,6 +42,12 @@ export const PERMISSIONS = {
   // Reports
   VIEW_REPORTS: "view_reports",
   EXPORT_REPORTS: "export_reports",
+
+  //Organization management
+  ORGANIZATIONS_READ: "organizations_read",
+  ORGANIZATIONS_CREATE: "organizations_create",
+  ORGANIZATIONS_UPDATE: "organizations_update",
+  ORGANIZATIONS_DELETE: "organizations_delete",
 };
 
 // Role-based permissions mapping

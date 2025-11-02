@@ -56,6 +56,7 @@ function AuthSync() {
               jobTitle: session.user.jobTitle,
             },
             roles: session.user.roles,
+            permissions: session.user.permissions || [], // Include permissions in user object
             isActive: session.user.isActive,
             mfaEnabled: session.user.mfaEnabled,
             mustChangePassword: session.user.mustChangePassword,
@@ -65,7 +66,6 @@ function AuthSync() {
             refreshToken: session.refreshToken,
             expiresIn: "24h", // Default value since session.expires is a date
           },
-          permissions: session.user.permissions,
         })
       );
     } else if (status === "unauthenticated") {

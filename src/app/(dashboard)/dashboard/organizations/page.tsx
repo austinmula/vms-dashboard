@@ -16,7 +16,9 @@ const { Title } = Typography;
 const OrganizationsPage: React.FC = () => {
   const router = useRouter();
   const permissions = useAppSelector(selectPermissions);
+  const authState = useAppSelector((state) => state.auth);
 
+  console.log("Full auth state:", authState);
   console.log("User permissions:", permissions);
 
   const [formVisible, setFormVisible] = useState(false);
@@ -25,11 +27,11 @@ const OrganizationsPage: React.FC = () => {
   const [selectedOrganization, setSelectedOrganization] =
     useState<Organization | null>(null);
 
-  // Check permissions
-  const canRead = permissions.includes("organizations_read");
-  const canCreate = permissions.includes("organizations_create");
-  const canUpdate = permissions.includes("organizations_update");
-  const canDelete = permissions.includes("organizations_delete");
+  // Check permissions (using kebab-case format from backend)
+  const canRead = permissions.includes("organizations-read");
+  const canCreate = permissions.includes("organizations-create");
+  const canUpdate = permissions.includes("organizations-update");
+  const canDelete = permissions.includes("organizations-delete");
 
   // If user doesn't have read permission, show message or redirect
   if (!canRead) {

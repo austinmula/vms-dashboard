@@ -16,71 +16,96 @@ type Role = {
 };
 
 export const PERMISSIONS = {
-  // User management
-  VIEW_USERS: "view_users",
-  CREATE_USER: "create_user",
-  EDIT_USER: "edit_user",
-  DELETE_USER: "delete_user",
+  // System admin
+  SYSTEM_ADMIN: "system-admin",
 
-  // Employee management
-  VIEW_EMPLOYEES: "view_employees",
-  CREATE_EMPLOYEE: "create_employee",
-  EDIT_EMPLOYEE: "edit_employee",
-  DELETE_EMPLOYEE: "delete_employee",
+  // User management
+  USERS_READ: "users-read",
+  USERS_CREATE: "users-create",
+  USERS_UPDATE: "users-update",
+  USERS_DELETE: "users-delete",
+  USERS_ASSIGN_ROLES: "users-assign-roles",
+
+  // Organization management
+  ORGANIZATIONS_READ: "organizations-read",
+  ORGANIZATIONS_CREATE: "organizations-create",
+  ORGANIZATIONS_UPDATE: "organizations-update",
+  ORGANIZATIONS_DELETE: "organizations-delete",
 
   // Visitor management
-  VIEW_VISITORS: "view_visitors",
-  CREATE_VISITOR: "create_visitor",
-  EDIT_VISITOR: "edit_visitor",
-  DELETE_VISITOR: "delete_visitor",
+  VISITORS_READ: "visitors-read",
+  VISITORS_CREATE: "visitors-create",
+  VISITORS_UPDATE: "visitors-update",
+  VISITORS_DELETE: "visitors-delete",
 
-  // System settings
-  VIEW_SETTINGS: "view_settings",
-  EDIT_SETTINGS: "edit_settings",
-  MANAGE_ROLES: "manage_roles",
+  // Visit management
+  VISITS_MANAGE: "visits-manage",
+  VISITS_CHECKIN: "visits-checkin",
 
-  // Reports
-  VIEW_REPORTS: "view_reports",
-  EXPORT_REPORTS: "export_reports",
-
-  //Organization management
-  ORGANIZATIONS_READ: "organizations_read",
-  ORGANIZATIONS_CREATE: "organizations_create",
-  ORGANIZATIONS_UPDATE: "organizations_update",
-  ORGANIZATIONS_DELETE: "organizations_delete",
+  // Legacy permissions (kept for backwards compatibility - can be removed later)
+  VIEW_USERS: "users-read",
+  CREATE_USER: "users-create",
+  EDIT_USER: "users-update",
+  DELETE_USER: "users-delete",
+  VIEW_VISITORS: "visitors-read",
+  CREATE_VISITOR: "visitors-create",
+  EDIT_VISITOR: "visitors-update",
+  DELETE_VISITOR: "visitors-delete",
 };
 
 // Role-based permissions mapping
+// NOTE: This is now handled by the backend. These mappings are kept for reference only.
+// The actual permissions come from the backend in the login response.
 export const ROLE_PERMISSIONS = {
-  [ROLES.SUPER_ADMIN]: Object.values(PERMISSIONS), // All permissions
+  [ROLES.SUPER_ADMIN]: [
+    PERMISSIONS.SYSTEM_ADMIN,
+    PERMISSIONS.USERS_READ,
+    PERMISSIONS.USERS_CREATE,
+    PERMISSIONS.USERS_UPDATE,
+    PERMISSIONS.USERS_DELETE,
+    PERMISSIONS.USERS_ASSIGN_ROLES,
+    PERMISSIONS.ORGANIZATIONS_READ,
+    PERMISSIONS.ORGANIZATIONS_CREATE,
+    PERMISSIONS.ORGANIZATIONS_UPDATE,
+    PERMISSIONS.ORGANIZATIONS_DELETE,
+    PERMISSIONS.VISITORS_READ,
+    PERMISSIONS.VISITORS_CREATE,
+    PERMISSIONS.VISITORS_UPDATE,
+    PERMISSIONS.VISITORS_DELETE,
+    PERMISSIONS.VISITS_MANAGE,
+    PERMISSIONS.VISITS_CHECKIN,
+  ],
 
   [ROLES.ADMIN]: [
-    PERMISSIONS.VIEW_USERS,
-    PERMISSIONS.CREATE_USER,
-    PERMISSIONS.EDIT_USER,
-    PERMISSIONS.VIEW_EMPLOYEES,
-    PERMISSIONS.CREATE_EMPLOYEE,
-    PERMISSIONS.EDIT_EMPLOYEE,
-    PERMISSIONS.VIEW_VISITORS,
-    PERMISSIONS.CREATE_VISITOR,
-    PERMISSIONS.EDIT_VISITOR,
-    PERMISSIONS.DELETE_VISITOR,
-    PERMISSIONS.VIEW_SETTINGS,
-    PERMISSIONS.VIEW_REPORTS,
-    PERMISSIONS.EXPORT_REPORTS,
+    PERMISSIONS.USERS_READ,
+    PERMISSIONS.USERS_CREATE,
+    PERMISSIONS.USERS_UPDATE,
+    PERMISSIONS.ORGANIZATIONS_READ,
+    PERMISSIONS.ORGANIZATIONS_CREATE,
+    PERMISSIONS.ORGANIZATIONS_UPDATE,
+    PERMISSIONS.VISITORS_READ,
+    PERMISSIONS.VISITORS_CREATE,
+    PERMISSIONS.VISITORS_UPDATE,
+    PERMISSIONS.VISITORS_DELETE,
+    PERMISSIONS.VISITS_MANAGE,
+    PERMISSIONS.VISITS_CHECKIN,
   ],
 
   [ROLES.MANAGER]: [
-    PERMISSIONS.VIEW_EMPLOYEES,
-    PERMISSIONS.VIEW_VISITORS,
-    PERMISSIONS.CREATE_VISITOR,
-    PERMISSIONS.EDIT_VISITOR,
-    PERMISSIONS.VIEW_REPORTS,
+    PERMISSIONS.VISITORS_READ,
+    PERMISSIONS.VISITORS_CREATE,
+    PERMISSIONS.VISITORS_UPDATE,
+    PERMISSIONS.VISITS_MANAGE,
+    PERMISSIONS.VISITS_CHECKIN,
   ],
 
-  [ROLES.EMPLOYEE]: [PERMISSIONS.VIEW_VISITORS, PERMISSIONS.CREATE_VISITOR],
+  [ROLES.EMPLOYEE]: [
+    PERMISSIONS.VISITORS_READ,
+    PERMISSIONS.VISITORS_CREATE,
+    PERMISSIONS.VISITS_CHECKIN,
+  ],
 
-  [ROLES.VISITOR]: [PERMISSIONS.VIEW_VISITORS],
+  [ROLES.VISITOR]: [PERMISSIONS.VISITORS_READ],
 };
 
 // Helper function to get permissions for a user's roles

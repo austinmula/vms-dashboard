@@ -24,6 +24,8 @@ import {
   BarChartOutlined,
   ExperimentOutlined,
   BankOutlined,
+  SafetyOutlined,
+  KeyOutlined,
 } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
@@ -70,7 +72,10 @@ export default function DashboardLayout({
       profile: "settings-profile",
       security: "settings-security",
       preferences: "settings-preferences",
-      users: "users",
+      users: "users-list",
+      roles: "users-roles",
+      permissions: "users-permissions",
+      rbac: "users-rbac",
       teams: "teams",
       organizations: "organizations",
       resources: "resources-root",
@@ -127,9 +132,29 @@ export default function DashboardLayout({
       ],
     },
     {
-      key: "users",
+      key: "users-root",
       icon: <UsergroupAddOutlined />,
-      label: <Link href="/dashboard/users">Users</Link>,
+      label: <span>Users</span>,
+      children: [
+        {
+          key: "users-list",
+          label: <Link href="/dashboard/users">All Users</Link>,
+        },
+        {
+          key: "users-roles",
+          icon: <SafetyOutlined />,
+          label: <Link href="/dashboard/rbac/roles">Roles</Link>,
+        },
+        {
+          key: "users-permissions",
+          icon: <KeyOutlined />,
+          label: <Link href="/dashboard/rbac/permissions">Permissions</Link>,
+        },
+        {
+          key: "users-rbac",
+          label: <Link href="/dashboard/rbac">RBAC Management</Link>,
+        },
+      ],
     },
     {
       key: "teams",

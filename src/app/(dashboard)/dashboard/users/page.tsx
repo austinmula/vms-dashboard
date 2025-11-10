@@ -15,8 +15,6 @@ import {
   Tooltip,
   Card,
   Typography,
-  Dropdown,
-  MenuProps,
 } from "antd";
 import {
   PlusOutlined,
@@ -26,13 +24,14 @@ import {
   UserAddOutlined,
   SafetyOutlined,
   ReloadOutlined,
-  MoreOutlined,
   LockOutlined,
   UnlockOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import { usersApi, User, CreateUserInput, UpdateUserInput } from "@/lib/api/users";
 import { rolesApi, Role } from "@/lib/api/roles";
+import { PermissionGate } from "@/components/wrappers/PermissionGate";
+import { PERMISSIONS } from "@/lib/rbac/permissions";
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -236,58 +235,74 @@ export default function UsersPage() {
     {
       title: "Actions",
       key: "actions",
-      render: (_, record: User) => {
-        const items: MenuProps['items'] = [
-          {
-            key: 'edit',
-            icon: <EditOutlined />,
-            label: 'Edit User',
-            onClick: () => openEditModal(record),
-          },
-          {
-            key: 'roles',
-            icon: <SafetyOutlined />,
-            label: 'Assign Roles',
-            onClick: () => openRoleModal(record),
-          },
-          {
-            type: 'divider',
-          },
-          {
-            key: 'deactivate',
-            icon: <DeleteOutlined />,
-            label: 'Deactivate',
-            danger: true,
-            onClick: () => handleDeactivate(record),
-            disabled: !record.isActive,
-          },
-        ];
-
-        return (
-          <Dropdown menu={{ items }} trigger={['click']}>
-            <Button type="text" icon={<MoreOutlined />} />
-          </Dropdown>
-        );
-      },
+      render: (_, record: User) => (
+        <Space size="small">
+          <PermissionGate permission={PERMISSIONS.USERS_UPDATE}>
+            <Tooltip title="Edit User">
+              <Button
+                type="text"
+                icon={<EditOutlined />}
+                onClick={() => openEditModal(record)}
+              />
+            </Tooltip>
+          </PermissionGate>
+          <PermissionGate permission={PERMISSIONS.USERS_ASSIGN_ROLES}>
+            <Tooltip title="Assign Roles">
+              <Button
+                type="text"
+                icon={<SafetyOutlined />}
+                onClick={() => openRoleModal(record)}
+              />
+            </Tooltip>
+          </PermissionGate>
+          <PermissionGate permission={PERMISSIONS.USERS_DELETE}>
+            <Tooltip title="Deactivate User">
+              <Button
+                type="text"
+                danger
+                icon={<DeleteOutlined />}
+                onClick={() => handleDeactivate(record)}
+                disabled={!record.isActive}
+              />
+            </Tooltip>
+          </PermissionGate>
+        </Space>
+      ),
     },
   ];
 
   return (
-    <div style={{ padding: 0 }}>
-      <Card>
+    <PermissionGate
+      permission={PERMISSIONS.USERS_READ}
+      fallback={
+        <Card>
+          <div style={{ padding: "48px", textAlign: "center" }}>
+            <Title level={3}>Access Denied</Title>
+            <Text type="secondary">
+              You do not have permission to view users. Please contact your
+              administrator if you believe this is an error.
+            </Text>
+          </div>
+        </Card>
+      }
+    >
+      <div style={{ padding: 0 }}>
+        <Card>
         <div style={{ marginBottom: 24 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <Title level={3} style={{ margin: 0 }}>
               User Management
             </Title>
             <Space>
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={() => setIsCreateModalOpen(true)}
-              >
-                Create User
-              </Button>
+              <PermissionGate permission={PERMISSIONS.USERS_CREATE}>
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => setIsCreateModalOpen(true)}
+                >
+                  Create User
+                </Button>
+              </PermissionGate>
               <Button icon={<ReloadOutlined />} onClick={fetchUsers}>
                 Refresh
               </Button>
@@ -468,5 +483,6 @@ export default function UsersPage() {
         </Form>
       </Modal>
     </div>
+    </PermissionGate>
   );
 }

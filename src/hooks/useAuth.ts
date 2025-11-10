@@ -7,6 +7,7 @@ import {
   selectIsAuthenticated,
   selectIsLoading,
   selectRoles,
+  selectPermissions,
   selectAccessToken,
   logout as logoutAction,
 } from "@/store/slices/authSlice";
@@ -18,6 +19,7 @@ export function useAuth() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const isLoading = useSelector(selectIsLoading);
   const roles = useSelector(selectRoles);
+  const permissions = useSelector(selectPermissions);
   const accessToken = useSelector(selectAccessToken);
 
   const logout = async () => {
@@ -39,6 +41,7 @@ export function useAuth() {
   return {
     user,
     roles,
+    permissions,
     isAuthenticated,
     isLoading,
     accessToken,

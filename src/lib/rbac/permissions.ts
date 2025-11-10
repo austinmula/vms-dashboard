@@ -17,45 +17,36 @@ type Role = {
 
 export const PERMISSIONS = {
   // System admin
-  SYSTEM_ADMIN: "system-admin",
+  SYSTEM_ADMIN: "system:admin",
 
   // User management
-  USERS_READ: "users-read",
-  USERS_CREATE: "users-create",
-  USERS_UPDATE: "users-update",
-  USERS_DELETE: "users-delete",
-  USERS_ASSIGN_ROLES: "users-assign-roles",
+  USERS_READ: "users:read",
+  USERS_CREATE: "users:create",
+  USERS_UPDATE: "users:update",
+  USERS_DELETE: "users:delete",
+  USERS_ASSIGN_ROLES: "users:assign-roles",
 
   // Organization management
-  ORGANIZATIONS_READ: "organizations-read",
-  ORGANIZATIONS_CREATE: "organizations-create",
-  ORGANIZATIONS_UPDATE: "organizations-update",
-  ORGANIZATIONS_DELETE: "organizations-delete",
+  ORGANIZATIONS_READ: "organizations:read",
+  ORGANIZATIONS_CREATE: "organizations:create",
+  ORGANIZATIONS_UPDATE: "organizations:update",
+  ORGANIZATIONS_DELETE: "organizations:delete",
 
   // Visitor management
-  VISITORS_READ: "visitors-read",
-  VISITORS_CREATE: "visitors-create",
-  VISITORS_UPDATE: "visitors-update",
-  VISITORS_DELETE: "visitors-delete",
+  VISITORS_READ: "visitors:read",
+  VISITORS_CREATE: "visitors:create",
+  VISITORS_UPDATE: "visitors:update",
+  VISITORS_DELETE: "visitors:delete",
 
   // Visit management
-  VISITS_MANAGE: "visits-manage",
-  VISITS_CHECKIN: "visits-checkin",
-
-  // Legacy permissions (kept for backwards compatibility - can be removed later)
-  VIEW_USERS: "users-read",
-  CREATE_USER: "users-create",
-  EDIT_USER: "users-update",
-  DELETE_USER: "users-delete",
-  VIEW_VISITORS: "visitors-read",
-  CREATE_VISITOR: "visitors-create",
-  EDIT_VISITOR: "visitors-update",
-  DELETE_VISITOR: "visitors-delete",
+  VISITS_MANAGE: "visits:manage",
+  VISITS_CHECKIN: "visits:checkin",
 };
 
 // Role-based permissions mapping
 // NOTE: This is now handled by the backend. These mappings are kept for reference only.
 // The actual permissions come from the backend in the login response.
+// These values now match the backend permission format (resource:action)
 export const ROLE_PERMISSIONS = {
   [ROLES.SUPER_ADMIN]: [
     PERMISSIONS.SYSTEM_ADMIN,

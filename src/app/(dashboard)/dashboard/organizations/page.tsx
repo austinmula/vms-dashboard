@@ -28,10 +28,10 @@ const OrganizationsPage: React.FC = () => {
     useState<Organization | null>(null);
 
   // Check permissions (using kebab-case format from backend)
-  const canRead = permissions.includes("organizations-read");
-  const canCreate = permissions.includes("organizations-create");
-  const canUpdate = permissions.includes("organizations-update");
-  const canDelete = permissions.includes("organizations-delete");
+  const canRead = permissions.includes("organizations:read");
+  const canCreate = permissions.includes("organizations:create");
+  const canUpdate = permissions.includes("organizations:update");
+  const canDelete = permissions.includes("organizations:delete");
 
   // If user doesn't have read permission, show message or redirect
   if (!canRead) {

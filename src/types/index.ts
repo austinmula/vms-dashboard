@@ -23,6 +23,7 @@ export interface User {
   id: string;
   email: string;
   employeeId: string;
+  organizationId: string;
   employee: Employee;
   roles: Role[];
   permissions: string[];
@@ -57,6 +58,7 @@ export interface AuthUser {
   isActive: boolean;
   mfaEnabled: boolean;
   mustChangePassword: boolean;
+  organizationId: string;
 }
 
 export interface AuthState {

@@ -33,6 +33,7 @@ export const authOptions: NextAuthOptions = {
               id: user.id,
               email: user.email,
               employeeId: user.employeeId,
+              organizationId: user.organizationId,
               name: `${user.employee?.firstName || ""} ${
                 user.employee?.lastName || ""
               }`.trim(),
@@ -69,6 +70,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.employeeId = user.employeeId;
+        token.organizationId = user.organizationId;
         token.name = user.name;
         token.firstName = user.firstName;
         token.lastName = user.lastName;
@@ -93,6 +95,7 @@ export const authOptions: NextAuthOptions = {
           id: token.id,
           email: token.email,
           employeeId: token.employeeId,
+          organizationId: token.organizationId,
           name: token.name,
           firstName: token.firstName,
           lastName: token.lastName,

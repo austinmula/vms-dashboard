@@ -1,21 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { Space, Tabs } from "antd";
 import { RoleList } from "@/components/rbac/RoleList";
 import { RoleForm } from "@/components/rbac/RoleForm";
 import { UserRoleAssignment } from "@/components/rbac/UserRoleAssignment";
 import { Role } from "@/lib/api/roles";
 import { PermissionGate } from "@/components/wrappers/PermissionGate";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function RolesPage() {
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isUserAssignmentVisible, setIsUserAssignmentVisible] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  
 
-  // TODO: Get this from the authenticated user's context
-  const organizationId = "your-org-id-here";
+  const {user} = useAuth();
+
+  const organizationId = user?.organizationId || "";
 
   const handleCreate = () => {
     setSelectedRole(null);

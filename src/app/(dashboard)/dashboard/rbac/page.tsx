@@ -14,6 +14,7 @@ import { PermissionForm } from "@/components/rbac/PermissionForm";
 import { Role } from "@/lib/api/roles";
 import { Permission } from "@/lib/api/permissions";
 import { PermissionGate } from "@/components/wrappers/PermissionGate";
+import { useAuth } from "@/hooks/useAuth";
 
 type TabKey = "roles" | "permissions";
 
@@ -26,9 +27,10 @@ export default function RBACPage() {
   const [isPermissionFormVisible, setIsPermissionFormVisible] = useState(false);
   const [refreshRolesKey, setRefreshRolesKey] = useState(0);
   const [refreshPermissionsKey, setRefreshPermissionsKey] = useState(0);
+  
+  const {user} = useAuth();
 
-  // TODO: Get this from the authenticated user's context
-  const organizationId = "your-org-id-here";
+  const organizationId = user?.organizationId || "";
 
   // Role handlers
   const handleCreateRole = () => {

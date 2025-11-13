@@ -32,6 +32,7 @@ const authSlice = createSlice({
         }`.trim(),
         department: user.employee?.department || "",
         jobTitle: user.employee?.jobTitle || "",
+        organizationId: user.organizationId,
         isActive: user.isActive,
         mfaEnabled: user.mfaEnabled,
         mustChangePassword: user.mustChangePassword,

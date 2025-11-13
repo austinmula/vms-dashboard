@@ -49,6 +49,7 @@ function AuthSync() {
             id: session.user.id,
             email: session.user.email,
             employeeId: session.user.employeeId,
+            organizationId: session.user.organizationId,
             employee: {
               firstName: session.user.firstName,
               lastName: session.user.lastName,
